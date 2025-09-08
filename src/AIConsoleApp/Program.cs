@@ -1,16 +1,16 @@
-﻿/*
-Run this model in C#.
-
-> dotnet add package OpenAI
-*/
-using OpenAI;
+﻿using OpenAI;
 using OpenAI.Chat;
 using System.ClientModel;
+using Microsoft.Extensions.Configuration;
 
-// To authenticate with the model you will need to generate a personal access token (PAT) in your GitHub settings. 
-// Create your PAT token by following instructions here: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
-var credential = "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";
+// Secure token retrieval using .NET Secret Manager
+var configuration = new ConfigurationBuilder()
+    .AddUserSecrets<Program>()
+    .Build();
 
+var credential = configuration["GitHubToken"] 
+    ?? throw new InvalidOperationException(
+        "GitHub token not configured. Run: dotnet user-secrets set GitHubToken YOUR_NEW_TOKEN");
 
 var openAIOptions = new OpenAIClientOptions()
 {
@@ -19,8 +19,8 @@ var openAIOptions = new OpenAIClientOptions()
 
 var client = new ChatClient("openai/gpt-4o-mini", new ApiKeyCredential(credential), openAIOptions);
 
-Console.WriteLine("VSLIVE! 2025 - AI Chat Console");
-Console.WriteLine("================================");
+Console.WriteLine("VSLIVE! 2025 - AI Chat Console (Secure Version)");
+Console.WriteLine("===============================================");
 Console.WriteLine("Ask me anything about C# and .NET! (type 'exit' to quit)");
 
 while (true)
@@ -53,6 +53,11 @@ while (true)
     catch (Exception ex)
     {
         Console.WriteLine($"Error: {ex.Message}");
+        if (ex.Message.Contains("GitHub token not configured"))
+        {
+            Console.WriteLine("Please create a new GitHub PAT and configure it using:");
+            Console.WriteLine("dotnet user-secrets set GitHubToken YOUR_NEW_TOKEN");
+        }
     }
 }
 
