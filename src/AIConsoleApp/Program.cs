@@ -61,4 +61,19 @@ while (true)
     }
 }
 
+// Add this method at the end of Program.cs, before the closing brace
+
+static void DisplayWelcomeMessage()
+{
+    Console.WriteLine("VSLIVE! 2025 - AI Chat Console (Secure Version)");
+    Console.WriteLine("===============================================");
+    Console.WriteLine("Features:");
+    Console.WriteLine("- Secure token management with .NET Secret Manager");
+    Console.WriteLine("- Integration with GitHub Models API");
+    Console.WriteLine("- Interactive chat interface");
+    Console.WriteLine();
+    Console.WriteLine("Ask me anything about C# and .NET! (type 'exit' to quit)");
+}
+
 Console.WriteLine("\nThanks for using the AI Chat Console!");
+DisplayWelcomeMessage();
